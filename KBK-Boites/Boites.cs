@@ -42,6 +42,7 @@ namespace KBK_Boites
         }
         public Boite(ABCBoite boite)
         {
+            // TODO: faire une copie d'une boite récursivement
             InnerBox = boite;
         }
         public override string ToString()
