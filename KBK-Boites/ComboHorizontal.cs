@@ -7,44 +7,26 @@ using System.Threading.Tasks;
 
 namespace KBK_Boites
 {
-    internal class ComboHorizontal : ABCBoite
+    public class ComboHorizontal : ABCBoite
     {
-        Boite LeftBox { get; init; }
-        Boite RightBox { get; init; }
-        public ComboHorizontal(Boite leftBox, Boite rightBox)
+        public override ABCBoite Clone()
         {
-            LeftBox = leftBox;
-            RightBox = rightBox;
+            throw new NotImplementedException();
         }
-        public override IEnumerator<Boite> GetEnumerator() => new ComboHorizontalEnumerator(this);
 
-        // I'm high lol, didnt realize at first we had to iterate over strings
-        class ComboHorizontalEnumerator(ComboHorizontal comboHorizontal) : IEnumerator<string>
+        public override IEnumerator<string> GetEnumerator()
         {
-            enum State { Uninitialized, First, Second }
-            private State CurrentState { get; set; } = State.Uninitialized;
-            public ComboHorizontal ComboHorizontal { get; init; } = comboHorizontal;
-            public Boite Current => CurrentState switch
-            {
-                State.First => ComboHorizontal.LeftBox,
-                State.Second => ComboHorizontal.RightBox,
-                _ => throw new UninitializedEnumeratorException()
-            };
+            throw new NotImplementedException();
+        }
 
-            object IEnumerator.Current => Current;
+        protected override (int, int) MinSize()
+        {
+            throw new NotImplementedException();
+        }
 
-            public bool MoveNext()
-            {
-                if (CurrentState == State.Second)
-                    return false;
-
-                // Wtf thats legal lol
-                CurrentState++;
-                return true;
-            }
-            public void Dispose() { }
-
-            public void Reset() { }
+        protected override void ResizeChildren()
+        {
+            throw new NotImplementedException();
         }
     }
 }

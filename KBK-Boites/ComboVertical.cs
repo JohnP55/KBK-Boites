@@ -1,53 +1,85 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace KBK_Boites
 {
-    internal class ComboVertical : ABCBoite
+    public class ComboVertical : ABCBoite
     {
-        Boite TopBox {  get; set; }
-        Boite BottomBox {  get; set; }
+        public ABCBoite TopBox => Children[0];
+        public ABCBoite BottomBox => Children[1];
 
-        public ComboVertical(Boite topBox, Boite bottomBox)
+        public ComboVertical(ABCBoite topBox, ABCBoite bottomBox)
         {
-            TopBox = topBox;
-            BottomBox = bottomBox;
+            Adopt(topBox.Clone());
+            Adopt(bottomBox.Clone());
+            (Width, Height) = MinSize();
+            ResizeChildren();
+        }
+        protected override void ResizeChildren()
+        {
+            foreach (var child in Children)
+            {
+                child.Resize(Width, child.Height);
+            }
+        }
+        public override ABCBoite Clone()
+        {
+            return new ComboVertical(TopBox, BottomBox);
         }
 
-        public override IEnumerator<string> GetEnumerator() => new ComboVerticalEnumerator(this);
-
-        class ComboVerticalEnumerator(ComboVertical comboVertical) : IEnumerator<string>
+        protected override (int, int) MinSize()
         {
-            enum State { Uninitialized, First, Second }
-            private State CurrentState { get; set; } = State.Uninitialized;
-            public ComboVertical ComboVertical { get; init; } = comboVertical;
-            public Boite Current => CurrentState switch
-            {
-                State.First => ComboVertical.TopBox,
-                State.Second => ComboVertical.BottomBox,
-                _ => throw new UninitializedEnumeratorException()
-            };
+            int width = Math.Max(TopBox.Width, BottomBox.Width);
+            int height = TopBox.Height + BottomBox.Height + 1; // plus separator
+            return (width, height);
+        }
+        public override IEnumerator<string> GetEnumerator()
+        {
+            return new ComboVerticalEnumerator(this);
+        }
+        class ComboVerticalEnumerator(ComboVertical cv) : IEnumerator<string>
+        {
+            public string Current { get; private set; } = "";
+            private int position = Utils.DEFAULT_POSITION;
+            private IEnumerator<string> topEnumerator = cv.TopBox.GetEnumerator();
+            private IEnumerator<string> bottomEnumerator = cv.BottomBox.GetEnumerator();
+            object IEnumerator.Current => throw new NotImplementedException();
 
-            object IEnumerator.Current => Current;
+            public void Dispose()
+            {
+                
+            }
 
             public bool MoveNext()
             {
-                if (CurrentState == State.Second)
-                    return false;
+                position++;
+                if (position == cv.Height) return false;
 
-                // Wtf thats legal lol
-                CurrentState++;
+                StringBuilder sb = new StringBuilder();
+                if (position == cv.TopBox.Height)
+                {
+                    sb.Append(HORIZONTAL_EDGE, cv.Width);
+                }
+                else
+                {
+                    var enumerator = position < cv.TopBox.Height ? topEnumerator : bottomEnumerator;
+                    enumerator.MoveNext();
+                    sb.Append(enumerator.Current);
+                }
+                Current = sb.ToString();
                 return true;
             }
-            public void Dispose() { }
 
-            public void Reset() { }
+            public void Reset()
+            {
+                Current = "";
+                position = -1;
+            }
         }
     }
-
-    class UninitializedEnumeratorException : Exception { }
 }

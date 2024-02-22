@@ -1,56 +1,77 @@
-﻿namespace KBK_Boites
+﻿using System.Collections;
+using System.Runtime.CompilerServices;
+using System.Text;
+
+namespace KBK_Boites
 {
-    public class Mono : ABCBoite
+    /// <summary>
+    /// Box that only has a text element
+    /// </summary>
+    public class Mono : ABCBoite, IEnumerable<string>
     {
         public string Text { get; set; }
         public Mono(string text)
         {
             Text = text;
-            (Width, Height) = MinSize;
+            (Width, Height) = MinSize();
         }
-        private (int, int) MinSize
+        protected override void ResizeChildren() { }
+        protected override (int, int) MinSize()
         {
-            get
-            {
-                string[] lines = Text.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
-                int width = lines.Max(x => x.Length);
-                int height = lines.Length;
-                return (width, height);
-            }
+            if (Text.Length == 0) return (0, 0);
+
+            string[] lines = Text.SplitLines();
+            int width = lines.Max(x => x.Length);
+            int height = lines.Length;
+            return (width, height);
         }
 
-        public override IEnumerator<Boite> GetEnumerator()
+        public override Mono Clone()
         {
-            throw new NotImplementedException();
+            return new Mono(Text);
         }
 
-        //Not sure how to enumerate through this
+        public override IEnumerator<string> GetEnumerator()
+        {
+            return new MonoEnumerator(this);
+        }
+
         class MonoEnumerator(Mono mono) : IEnumerator<string>
         {
-            enum State { Uninitialized, First, Second }
-            private State CurrentState { get; set; } = State.Uninitialized;
-            public Mono mono { get; init; } = mono;
-            public Boite Current => CurrentState switch
-            {
-                State.First => ComboHorizontal.LeftBox,
-                State.Second => ComboHorizontal.RightBox,
-                _ => throw new UninitializedEnumeratorException()
-            };
+            const char PADDING = ' ';
+            
+            private string[] Lines { get; } = mono.Text.SplitLines();
+            public string Current { get; private set; } = "";
+            private int position = Utils.DEFAULT_POSITION;
+            object IEnumerator.Current => throw new NotImplementedException();
 
-            object IEnumerator.Current => Current;
+            public void Dispose()
+            {
+                
+            }
 
             public bool MoveNext()
             {
-                if (CurrentState == State.Second)
-                    return false;
+                position++;
+                if (position >= mono.Height) return false;
 
-                // Wtf thats legal lol
-                CurrentState++;
+                string line = position < Lines.Length ? Lines[position] : "";
+                int paddingCount = mono.Width - line.Length;
+                
+                StringBuilder sb = new StringBuilder();
+                sb.Append(line);
+                if (paddingCount > 0)
+                    sb.Append(PADDING, paddingCount);
+
+                Current = sb.ToString();
                 return true;
             }
-            public void Dispose() { }
 
-            public void Reset() { }
+            public void Reset()
+            {
+                position = Utils.DEFAULT_POSITION;
+                Current = "";
+            }
         }
     }
 }
