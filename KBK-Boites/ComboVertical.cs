@@ -17,10 +17,9 @@ namespace KBK_Boites
         }
         protected override void ResizeChildren()
         {
-            foreach (var child in Children)
-            {
-                child.Resize(Width, child.Height);
-            }
+            TopBox.Resize(Width, TopBox.Height);
+            int bottomHeight = Height - (TopBox.Height + 1);
+            BottomBox.Resize(Width, bottomHeight);
         }
         public override ABCBoite Clone()
         {
