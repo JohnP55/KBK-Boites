@@ -30,6 +30,7 @@ namespace KBK_Boites
         {
             int width = Math.Max(TopBox.Width, BottomBox.Width);
             int height = TopBox.Height + BottomBox.Height + 1; // plus separator
+            width = Math.Max(width, 1);
             return (width, height);
         }
         public override IEnumerator<string> GetEnumerator()

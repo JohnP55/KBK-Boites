@@ -29,7 +29,8 @@ namespace KBK_Boites
         protected override (int, int) MinSize()
         {
             int width = LeftBox.Width + RightBox.Width + 1; // plus separator
-            int height = Math.Max(LeftBox.Height, RightBox.Height); 
+            int height = Math.Max(LeftBox.Height, RightBox.Height);
+            height = Math.Max(height, 1);
             return (width, height);
         }
         public override ABCBoite Clone()
