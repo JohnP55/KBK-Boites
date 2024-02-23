@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.Collections;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace KBK_Boites
 {
@@ -46,21 +41,18 @@ namespace KBK_Boites
         {
             public string Current { get; private set; } = "";
             private int position = Utils.DEFAULT_POSITION;
-            private IEnumerator<string> topEnumerator = cv.TopBox.GetEnumerator();
-            private IEnumerator<string> bottomEnumerator = cv.BottomBox.GetEnumerator();
+            private readonly IEnumerator<string> topEnumerator = cv.TopBox.GetEnumerator();
+            private readonly IEnumerator<string> bottomEnumerator = cv.BottomBox.GetEnumerator();
             object IEnumerator.Current => throw new NotImplementedException();
 
-            public void Dispose()
-            {
-                
-            }
+            public void Dispose() { }
 
             public bool MoveNext()
             {
                 position++;
-                if (position == cv.Height) return false;
+                if (position >= cv.Height) return false;
 
-                StringBuilder sb = new StringBuilder();
+                StringBuilder sb = new();
                 if (position == cv.TopBox.Height)
                 {
                     sb.Append(HORIZONTAL_EDGE, cv.Width);

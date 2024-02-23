@@ -39,16 +39,13 @@ namespace KBK_Boites
         class MonoEnumerator(Mono mono) : IEnumerator<string>
         {
             const char PADDING = ' ';
-            
             private string[] Lines { get; } = mono.Text.SplitLines();
             public string Current { get; private set; } = "";
+
             private int position = Utils.DEFAULT_POSITION;
             object IEnumerator.Current => throw new NotImplementedException();
 
-            public void Dispose()
-            {
-                
-            }
+            public void Dispose() { }
 
             public bool MoveNext()
             {
@@ -58,7 +55,7 @@ namespace KBK_Boites
                 string line = position < Lines.Length ? Lines[position] : "";
                 int paddingCount = mono.Width - line.Length;
                 
-                StringBuilder sb = new StringBuilder();
+                StringBuilder sb = new();
                 sb.Append(line);
                 if (paddingCount > 0)
                     sb.Append(PADDING, paddingCount);

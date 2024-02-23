@@ -52,21 +52,18 @@ namespace KBK_Boites
         {
             public string Current { get; private set; } = "";
             private int position = Utils.DEFAULT_POSITION;
-            private IEnumerator<string> childEnumerator = boite.Child.GetEnumerator();
-            private int heightPadded = boite.Height + (boite.IsRoot ? 2 : 0);
+            private readonly IEnumerator<string> childEnumerator = boite.Child.GetEnumerator();
+            private readonly int heightPadded = boite.Height + (boite.IsRoot ? 2 : 0);
             object IEnumerator.Current => throw new NotImplementedException();
 
-            public void Dispose()
-            {
-                
-            }
+            public void Dispose() { }
 
             public bool MoveNext()
             {
                 position++;
                 if (position == heightPadded) return false;
 
-                StringBuilder sb = new StringBuilder();
+                StringBuilder sb = new();
                 if (boite.IsRoot && (position == 0 || position == heightPadded - 1))
                 {
                     sb.Append(CORNER);

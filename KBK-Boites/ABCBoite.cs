@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization.Formatters;
 using System.Text;
-using System.Threading.Tasks;
+
 
 namespace KBK_Boites
 {
@@ -23,7 +20,7 @@ namespace KBK_Boites
         protected const char HORIZONTAL_EDGE = '-';
 
         protected ABCBoite? Parent { get; private set; } = null;
-        protected List<ABCBoite> Children { get; private set; } = new List<ABCBoite>();
+        protected List<ABCBoite> Children { get; private set; } = [];
         public bool IsRoot => Parent == null;
         protected void Adopt(ABCBoite child)
         {
@@ -50,7 +47,7 @@ namespace KBK_Boites
         public abstract ABCBoite Clone();
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             foreach (string line in this)
             {
                 sb.Append(line);
