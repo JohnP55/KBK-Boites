@@ -13,14 +13,14 @@ namespace KBK_Boites
     {
         public InvalidResizeException() : base("Tried to resize a box below its minimum bounds.") { }
     }
-    public abstract class ABCBoite : IEnumerable<string>
+    public abstract class ABCBoite : IEnumerable<string>, IVisitable<ABCBoite>
     {
         protected const char CORNER = '+';
         protected const char VERTICAL_EDGE = '|';
         protected const char HORIZONTAL_EDGE = '-';
 
         protected ABCBoite? Parent { get; private set; } = null;
-        protected List<ABCBoite> Children { get; private set; } = [];
+        public List<ABCBoite> Children { get; private set; } = [];
         public bool IsRoot => Parent == null;
         protected void Adopt(ABCBoite child)
         {
@@ -56,5 +56,12 @@ namespace KBK_Boites
         }
         public abstract IEnumerator<string> GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        public void Accepter(IVisiteur<ABCBoite> viz)
+        {
+            viz.Entrer();
+            viz.Visiter(this, null);
+            viz.Sortir();
+        }
     }
 }
