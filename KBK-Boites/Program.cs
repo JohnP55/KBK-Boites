@@ -25,12 +25,14 @@ multiligne";
         Console.WriteLine(new Boite(chplus));
         ComboVertical cvv = new(new Boite(chplus), new Boite("coucou"));
         Console.WriteLine(new Boite(cvv));
-        Console.WriteLine(new Boite(
-           new ComboHorizontal(
-              new Boite("a\nb\nc\nd\ne"),
-                 new Boite(
+        Console.WriteLine(
+        new Boite(
+            new ComboHorizontal(
+                new Boite("a\nb\nc\nd\ne"),
+                new Boite(
                     new ComboVertical(
-                       new Boite("allo"), new Boite("yo")
+                        new Boite("allo"), 
+                        new Boite("yo")
                     )
                  )
               )
