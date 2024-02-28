@@ -33,6 +33,7 @@ namespace KBK_Boites
         protected abstract void ResizeChildren();
         public virtual int Width { get; protected set; }
         public virtual int Height { get; protected set; }
+        public int Area => Width * Height;
         protected abstract (int, int) MinSize();
         public virtual void Resize(int width, int height)
         {
@@ -57,7 +58,7 @@ namespace KBK_Boites
         public abstract IEnumerator<string> GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        public void Accepter(IVisiteur<ABCBoite> viz)
+        public virtual void Accepter(IVisiteur<ABCBoite> viz)
         {
             viz.Entrer();
             viz.Visiter(this, null);

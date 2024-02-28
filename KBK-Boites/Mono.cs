@@ -36,6 +36,13 @@ namespace KBK_Boites
             return new MonoEnumerator(this);
         }
 
+        public override void Accepter(IVisiteur<ABCBoite> viz)
+        {
+            viz.Entrer();
+            viz.Visiter(this, () => Console.Write($" {Height} x {Width}"));
+            viz.Sortir();
+        }
+
         class MonoEnumerator(Mono mono) : IEnumerator<string>
         {
             const char PADDING = ' ';
