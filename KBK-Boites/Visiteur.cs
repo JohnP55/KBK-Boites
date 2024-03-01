@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KBK_Boites
+namespace Boites
 {
     public interface IVisitable<T>
     {

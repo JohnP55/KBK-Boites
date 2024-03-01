@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KBK_Boites
+namespace Boites
 {
     public class InvalidBoxException : Exception
     {
@@ -18,17 +18,17 @@ namespace KBK_Boites
     public class FabriqueBoites
     {
         int Position { get; set; } = 0;
-        List<ABCBoite> ParseSome(string[] boxes, int boxCount)
+        List<IBoite> ParseSome(string[] boxes, int boxCount)
         {
-            List<ABCBoite> output = [];
+            List<IBoite> output = [];
             for (int i = 0; i < boxCount; i++)
             {
-                ABCBoite box = ParseNext(boxes);
+                IBoite box = ParseNext(boxes);
                 output.Add(box);
             }
             return output;
         }
-        ABCBoite ParseNext(string[] boxes)
+        IBoite ParseNext(string[] boxes)
         {
             while (Position < boxes.Length)
             {
@@ -67,7 +67,7 @@ namespace KBK_Boites
             }
             throw new EmptyConfigException();
         }
-        public ABCBoite Créer(string s)
+        public IBoite Créer(string s)
         {
             string[] boxes = s.SplitLines();
             return ParseNext(boxes);

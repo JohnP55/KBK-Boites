@@ -2,12 +2,12 @@
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace KBK_Boites
+namespace Boites
 {
     /// <summary>
     /// Box that only has a text element
     /// </summary>
-    public class Mono : ABCBoite, IEnumerable<string>
+    public class Mono : IBoite, IEnumerable<string>
     {
         public string Text { get; set; }
         public Mono(string text)
@@ -36,7 +36,7 @@ namespace KBK_Boites
             return new MonoEnumerator(this);
         }
 
-        public override void Accepter(IVisiteur<ABCBoite> viz)
+        public override void Accepter(IVisiteur<IBoite> viz)
         {
             viz.Entrer();
             viz.Visiter(this, () => Console.Write($" {Height} x {Width}"));

@@ -1,14 +1,14 @@
 ﻿using System.Collections;
 using System.Text;
 
-namespace KBK_Boites
+namespace Boites
 {
-    public class ComboVertical : ABCBoite
+    public class ComboVertical : IBoite
     {
-        public ABCBoite TopBox => Children[0];
-        public ABCBoite BottomBox => Children[1];
+        public IBoite TopBox => Children[0];
+        public IBoite BottomBox => Children[1];
 
-        public ComboVertical(ABCBoite topBox, ABCBoite bottomBox)
+        public ComboVertical(IBoite topBox, IBoite bottomBox)
         {
             Adopt(topBox.Clone());
             Adopt(bottomBox.Clone());
@@ -21,7 +21,7 @@ namespace KBK_Boites
             int bottomHeight = Height - (TopBox.Height + 1);
             BottomBox.Resize(Width, bottomHeight);
         }
-        public override ABCBoite Clone()
+        public override IBoite Clone()
         {
             return new ComboVertical(TopBox, BottomBox);
         }

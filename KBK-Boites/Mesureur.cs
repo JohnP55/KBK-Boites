@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KBK_Boites
+namespace Boites
 {
-    public class Mesureur : IVisiteur<ABCBoite>
+    public class Mesureur : IVisiteur<IBoite>
     {
-        public ABCBoite? PlusPetite { get; private set; }
-        public ABCBoite? PlusGrande {  get; private set; }
+        public IBoite? PlusPetite { get; private set; }
+        public IBoite? PlusGrande {  get; private set; }
         public void Entrer()
         {
         }
@@ -18,7 +18,7 @@ namespace KBK_Boites
         {
         }
 
-        public void Visiter(ABCBoite elem, Action? opt)
+        public void Visiter(IBoite elem, Action? opt)
         {
             PlusPetite ??= elem;
             PlusGrande ??= elem;

@@ -1,14 +1,14 @@
 ﻿using System.Collections;
 using System.Text;
 
-namespace KBK_Boites
+namespace Boites
 {
     /// <summary>
     /// Box that only ever has one child
     /// </summary>
-    public class Boite : ABCBoite
+    public class Boite : IBoite
     {
-        public ABCBoite Child => Children[0];
+        public IBoite Child => Children[0];
 
         // <wall_of_text>
         //     ikik this shit is unreadable, but this optimizes a *lot* by
@@ -21,8 +21,8 @@ namespace KBK_Boites
         // </wall_of_text>
         public Boite() : this(new Mono(""), false) { }
         public Boite(string text) : this(new Mono(text), false) { }
-        public Boite(ABCBoite boite) : this(boite, true) { }
-        private Boite(ABCBoite boite, bool clone)
+        public Boite(IBoite boite) : this(boite, true) { }
+        private Boite(IBoite boite, bool clone)
         {
             var child = clone ? boite.Clone() : boite;
             Adopt(child);

@@ -6,19 +6,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KBK_Boites
+namespace Boites
 {
-    public class MonoCombo : ABCBoite
+    public class MonoCombo : IBoite
     {
-        public ABCBoite Child => Children[0];
-        public MonoCombo(ABCBoite boite)
+        public IBoite Child => Children[0];
+        public MonoCombo(IBoite boite)
         {
             Adopt(boite.Clone());
             (Width, Height) = MinSize();
             ResizeChildren();
         }
 
-        public override ABCBoite Clone()
+        public override IBoite Clone()
         {
             return new MonoCombo(Child);
         }

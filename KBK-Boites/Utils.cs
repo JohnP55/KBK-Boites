@@ -1,5 +1,5 @@
 ﻿
-namespace KBK_Boites
+namespace Boites
 {
     public static class Utils
     {

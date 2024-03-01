@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
 
-namespace KBK_Boites;
+namespace Boites;
 
 class Program
 {
@@ -30,7 +30,7 @@ class Program
     }
     static void TesterVisiteurs()
     {
-        static void Tester(Boite b, params IVisiteur<ABCBoite>[] viz)
+        static void Tester(Boite b, params IVisiteur<IBoite>[] viz)
         {
             Console.WriteLine(b);
             foreach (var v in viz)
