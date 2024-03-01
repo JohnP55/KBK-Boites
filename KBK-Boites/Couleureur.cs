@@ -25,19 +25,20 @@ namespace KBK_Boites
         {
             ConsoleColor prevColor = Console.ForegroundColor;
             // Man I love pattern matching fuck classic switch case
-            Console.ForegroundColor = elem switch
-            {
-                ComboHorizontal => ConsoleColor.Red,
-                ComboVertical => ConsoleColor.Green,
-                Mono => ConsoleColor.Magenta,
-                MonoCombo => ConsoleColor.Yellow,
-                Boite => ConsoleColor.Blue,
-                _ => ConsoleColor.Cyan,
-            };
 
             Console.Write(new string(INDENT, indentDepth));
-            Console.Write(elem.GetType().Name);
+            Console.ForegroundColor = elem.Name switch
+            {
+                ComboHorizontal.NAME => ConsoleColor.Red,
+                ComboVertical.NAME => ConsoleColor.Green,
+                Mono.NAME => ConsoleColor.Magenta,
+                MonoCombo.NAME => ConsoleColor.Yellow,
+                Boite.NAME => ConsoleColor.Blue,
+                _ => ConsoleColor.Cyan,
+            };
+            Console.Write(elem.Name);
             opt?.Invoke();
+
             Console.WriteLine();
             Console.ForegroundColor = prevColor;
 

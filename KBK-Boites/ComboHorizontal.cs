@@ -12,6 +12,9 @@ namespace KBK_Boites
         public ABCBoite LeftBox => Children[0];
         public ABCBoite RightBox => Children[1];
 
+        public const string NAME = "ComboHorizontal";
+        public override string Name => NAME;
+
         public ComboHorizontal(ABCBoite leftBox, ABCBoite rightBox)
         {
             Adopt(leftBox.Clone());

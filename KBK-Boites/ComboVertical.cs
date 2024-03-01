@@ -7,6 +7,8 @@ namespace KBK_Boites
     {
         public ABCBoite TopBox => Children[0];
         public ABCBoite BottomBox => Children[1];
+        public const string NAME = "ComboVertical";
+        public override string Name => NAME;
 
         public ComboVertical(ABCBoite topBox, ABCBoite bottomBox)
         {

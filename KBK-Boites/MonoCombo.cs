@@ -11,6 +11,9 @@ namespace KBK_Boites
     public class MonoCombo : ABCBoite
     {
         public ABCBoite Child => Children[0];
+        public const string NAME = "MonoCombo";
+        public override string Name => NAME;
+
         public MonoCombo(ABCBoite boite)
         {
             Adopt(boite.Clone());

@@ -18,6 +18,7 @@ namespace KBK_Boites
         protected const char CORNER = '+';
         protected const char VERTICAL_EDGE = '|';
         protected const char HORIZONTAL_EDGE = '-';
+        public abstract string Name { get; }
 
         protected ABCBoite? Parent { get; private set; } = null;
         public List<ABCBoite> Children { get; private set; } = [];
@@ -61,7 +62,7 @@ namespace KBK_Boites
         public virtual void Accepter(IVisiteur<ABCBoite> viz)
         {
             viz.Entrer();
-            viz.Visiter(this, null);
+            viz.Visiter(this);
             viz.Sortir();
         }
     }

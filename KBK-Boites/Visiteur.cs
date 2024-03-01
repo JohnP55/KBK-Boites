@@ -14,6 +14,6 @@ namespace KBK_Boites
     {
         void Entrer();
         void Sortir();
-        void Visiter(T elem, Action? opt);
+        void Visiter(T elem, Action? opt = null);
     }
 }

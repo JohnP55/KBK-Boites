@@ -9,6 +9,8 @@ namespace KBK_Boites
     public class Boite : ABCBoite
     {
         public ABCBoite Child => Children[0];
+        public const string NAME = "Boite";
+        public override string Name => NAME;
 
         // <wall_of_text>
         //     ikik this shit is unreadable, but this optimizes a *lot* by

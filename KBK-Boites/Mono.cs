@@ -9,7 +9,11 @@ namespace KBK_Boites
     /// </summary>
     public class Mono : ABCBoite, IEnumerable<string>
     {
+        public const string NAME = "Mono";
         public string Text { get; set; }
+
+        public override string Name => NAME;
+
         public Mono(string text)
         {
             Text = text;
@@ -40,6 +44,7 @@ namespace KBK_Boites
         {
             viz.Entrer();
             viz.Visiter(this, () => Console.Write($" {Height} x {Width}"));
+
             viz.Sortir();
         }
 
