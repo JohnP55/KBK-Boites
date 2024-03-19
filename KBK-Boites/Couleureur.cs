@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KBK_Boites
+namespace Boites
 {
-    public class Couleureur : IVisiteur<ABCBoite>
+    public class Couleureur : IVisiteur<IBoite>
     {
         private int indentDepth = 0;
         const int NUM_INDENTS = 2;
@@ -21,7 +21,7 @@ namespace KBK_Boites
             indentDepth -= NUM_INDENTS;
         }
 
-        public void Visiter(ABCBoite elem, Action? opt)
+        public void Visiter(IBoite elem, Action? opt)
         {
             ConsoleColor prevColor = Console.ForegroundColor;
             // Man I love pattern matching fuck classic switch case

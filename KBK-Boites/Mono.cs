@@ -2,12 +2,12 @@
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace KBK_Boites
+namespace Boites
 {
     /// <summary>
     /// Box that only has a text element
     /// </summary>
-    public class Mono : ABCBoite, IEnumerable<string>
+    public class Mono : IBoite, IEnumerable<string>
     {
         public string Text { get; set; }
         public Mono(string text)
@@ -36,45 +36,37 @@ namespace KBK_Boites
             return new MonoEnumerator(this);
         }
 
-        public override void Accepter(IVisiteur<ABCBoite> viz)
+        public override void Accepter(IVisiteur<IBoite> viz)
         {
             viz.Entrer();
             viz.Visiter(this, () => Console.Write($" {Height} x {Width}"));
             viz.Sortir();
         }
 
-        class MonoEnumerator(Mono mono) : IEnumerator<string>
+        class MonoEnumerator : AbstractBoiteEnumerator
         {
             const char PADDING = ' ';
-            private string[] Lines { get; } = mono.Text.SplitLines();
-            public string Current { get; private set; } = "";
-
-            private int position = Utils.DEFAULT_POSITION;
-            object IEnumerator.Current => throw new NotImplementedException();
-
-            public void Dispose() { }
-
-            public bool MoveNext()
+            private string[] Lines { get; }
+            public MonoEnumerator(Mono mono) : base(mono)
             {
-                position++;
-                if (position >= mono.Height) return false;
+                Lines = Utils.SplitLines(mono.Text);
+            }
+            protected override string GetCurrent_Impl()
+            {
+                string line = Position < Lines.Length ? Lines[Position] : "";
 
-                string line = position < Lines.Length ? Lines[position] : "";
-                int paddingCount = mono.Width - line.Length;
-                
                 StringBuilder sb = new();
                 sb.Append(line);
+
+                int paddingCount = Box.Width - line.Length;
                 if (paddingCount > 0)
                     sb.Append(PADDING, paddingCount);
-
-                Current = sb.ToString();
-                return true;
+                
+                return sb.ToString();
             }
-
-            public void Reset()
+            protected override bool MoveChildren_Impl()
             {
-                position = Utils.DEFAULT_POSITION;
-                Current = "";
+                return true;
             }
         }
     }

@@ -1,5 +1,5 @@
 ﻿
-namespace KBK_Boites
+namespace Boites
 {
     public static class Utils
     {
@@ -14,6 +14,11 @@ namespace KBK_Boites
             for (; pos < s.Length && !pred(s[pos]); pos++)
                 ;
             return pos;
+        }
+
+        public static string ReadUntilChar(string s, char endToken)
+        {
+            return s[..FindIf(s, c => c == endToken)];
         }
     }
 }

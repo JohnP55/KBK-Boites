@@ -1,14 +1,14 @@
 ﻿using System.Collections;
 using System.Text;
 
-namespace KBK_Boites
+namespace Boites
 {
     /// <summary>
     /// Box that only ever has one child
     /// </summary>
-    public class Boite : ABCBoite
+    public class Boite : IBoite
     {
-        public ABCBoite Child => Children[0];
+        public IBoite Child => Children[0];
 
         // <wall_of_text>
         //     ikik this shit is unreadable, but this optimizes a *lot* by
@@ -21,8 +21,8 @@ namespace KBK_Boites
         // </wall_of_text>
         public Boite() : this(new Mono(""), false) { }
         public Boite(string text) : this(new Mono(text), false) { }
-        public Boite(ABCBoite boite) : this(boite, true) { }
-        private Boite(ABCBoite boite, bool clone)
+        public Boite(IBoite boite) : this(boite, true) { }
+        private Boite(IBoite boite, bool clone)
         {
             var child = clone ? boite.Clone() : boite;
             Adopt(child);
@@ -48,51 +48,45 @@ namespace KBK_Boites
             return new BoiteEnumerator(this);
         }
 
-        class BoiteEnumerator(Boite boite) : IEnumerator<string>
+        class BoiteEnumerator : AbstractBoiteEnumerator
         {
-            public string Current { get; private set; } = "";
-            private int position = Utils.DEFAULT_POSITION;
-            private readonly IEnumerator<string> childEnumerator = boite.Child.GetEnumerator();
-            private readonly int heightPadded = boite.Height + (boite.IsRoot ? 2 : 0);
-            object IEnumerator.Current => throw new NotImplementedException();
-
-            public void Dispose() { }
-
-            public bool MoveNext()
+            private IEnumerator<string> ChildEnumerator => ChildEnumerators[0];
+            private bool ShouldDisplayBorder => Box.IsRoot && (Position == 0 || Position == ScaledHeight - 1);
+            public BoiteEnumerator(Boite boite) : base(boite)
             {
-                position++;
-                if (position == heightPadded) return false;
-
+                ScaledHeight = boite.Height + (boite.IsRoot ? 2 : 0); // Add top and bottom borders
+            }
+            protected override string GetCurrent_Impl()
+            {
                 StringBuilder sb = new();
-                if (boite.IsRoot && (position == 0 || position == heightPadded - 1))
+                if (ShouldDisplayBorder)
                 {
                     sb.Append(CORNER);
-                    sb.Append(HORIZONTAL_EDGE, boite.Width);
+                    sb.Append(HORIZONTAL_EDGE, Box.Width);
                     sb.Append(CORNER);
                 }
                 else
                 {
-                    childEnumerator.MoveNext();
-                    sb.Append(childEnumerator.Current);
-                
-                    if (boite.IsRoot)
+                    sb.Append(ChildEnumerator.Current);
+
+                    // Add walls if necessary
+                    if (Box.IsRoot)
                     {
                         sb.Insert(0, VERTICAL_EDGE);
                         sb.Append(VERTICAL_EDGE);
                     }
                 }
 
-                if (boite.IsRoot && position < heightPadded - 1)
+                if (Box.IsRoot && Position < ScaledHeight - 1)
                     sb.Append(Environment.NewLine);
 
-                Current = sb.ToString();
-                return true;
+                return sb.ToString();
             }
-
-            public void Reset()
+            protected override bool MoveChildren_Impl()
             {
-                Current = "";
-                position = Utils.DEFAULT_POSITION;
+                if (ShouldDisplayBorder)
+                    return true;
+                return ChildEnumerator.MoveNext();
             }
         }
     }

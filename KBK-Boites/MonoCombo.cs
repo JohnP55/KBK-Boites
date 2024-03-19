@@ -3,58 +3,46 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KBK_Boites
+namespace Boites
 {
-    public class MonoCombo : ABCBoite
+    public class MonoCombo : IBoite
     {
-        public ABCBoite Child => Children[0];
-        public MonoCombo(ABCBoite boite)
+        public IBoite Child => Children[0];
+        public MonoCombo(IBoite boite)
         {
             Adopt(boite.Clone());
             (Width, Height) = MinSize();
             ResizeChildren();
         }
-
-        public override ABCBoite Clone()
+        public override IBoite Clone()
         {
             return new MonoCombo(Child);
         }
-
         public override IEnumerator<string> GetEnumerator()
         {
             return new MonoComboEnumerator(this);
         }
-
         protected override (int, int) MinSize()
         {
             return (Child.Width + 2, Child.Height + 2); // adding borders
         }
-
         protected override void ResizeChildren()
         {
             Child.Resize(Width - 2, Height - 2);
         }
 
-        class MonoComboEnumerator(MonoCombo mc) : IEnumerator<string>
+        class MonoComboEnumerator(MonoCombo mc) : AbstractBoiteEnumerator(mc)
         {
-            public string Current { get; private set; } = "";
-            private int position = Utils.DEFAULT_POSITION;
-            private readonly IEnumerator<string> childEnumerator = mc.Child.GetEnumerator();
-
-            object IEnumerator.Current => throw new NotImplementedException();
-
-            public void Dispose() { }
-
-            public bool MoveNext()
+            private IEnumerator<string> ChildEnumerator => ChildEnumerators[0];
+            private bool ShouldDisplayBorder => Position == 0 || Position == mc.Height - 1;
+            protected override string GetCurrent_Impl()
             {
-                position++;
-                if (position == mc.Height) return false;
-
                 StringBuilder sb = new();
-                if (position == 0 || position == mc.Height - 1)
+                if (ShouldDisplayBorder)
                 {
                     sb.Append(CORNER);
                     sb.Append(HORIZONTAL_EDGE, mc.Width - 2); // minus 2 edges
@@ -62,19 +50,17 @@ namespace KBK_Boites
                 }
                 else
                 {
-                    childEnumerator.MoveNext();
                     sb.Append(VERTICAL_EDGE);
-                    sb.Append(childEnumerator.Current);
+                    sb.Append(ChildEnumerator.Current);
                     sb.Append(VERTICAL_EDGE);
                 }
-                Current = sb.ToString();
-                return true;
+                return sb.ToString();
             }
-
-            public void Reset()
+            protected override bool MoveChildren_Impl()
             {
-                Current = "";
-                position = Utils.DEFAULT_POSITION;
+                if (!ShouldDisplayBorder)
+                    return ChildEnumerator.MoveNext();
+                return true;
             }
         }
     }

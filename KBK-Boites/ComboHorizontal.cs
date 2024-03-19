@@ -5,14 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KBK_Boites
+namespace Boites
 {
-    public class ComboHorizontal : ABCBoite
+    public class ComboHorizontal : IBoite
     {
-        public ABCBoite LeftBox => Children[0];
-        public ABCBoite RightBox => Children[1];
+        public IBoite LeftBox => Children[0];
+        public IBoite RightBox => Children[1];
 
-        public ComboHorizontal(ABCBoite leftBox, ABCBoite rightBox)
+        public ComboHorizontal(IBoite leftBox, IBoite rightBox)
         {
             Adopt(leftBox.Clone());
             Adopt(rightBox.Clone());
@@ -33,43 +33,29 @@ namespace KBK_Boites
             height = Math.Max(height, 1);
             return (width, height);
         }
-        public override ABCBoite Clone()
+        public override IBoite Clone()
         {
             return new ComboHorizontal(LeftBox, RightBox);
         }
-
         public override IEnumerator<string> GetEnumerator() => new ComboHorizontalEnumerator(this);
-        class ComboHorizontalEnumerator(ComboHorizontal ch) : IEnumerator<string>
+
+        class ComboHorizontalEnumerator(ComboHorizontal ch) : AbstractBoiteEnumerator(ch)
         {
-            public string Current { get; private set; } = "";
-            private int position = Utils.DEFAULT_POSITION;
-            private readonly IEnumerator<string> leftEnumerator = ch.LeftBox.GetEnumerator();
-            private readonly IEnumerator<string> rightEnumerator = ch.RightBox.GetEnumerator();
-            object IEnumerator.Current => throw new NotImplementedException();
-
-            public void Dispose() { }
-
-            public bool MoveNext()
+            private IEnumerator<string> LeftEnumerator => ChildEnumerators[0];
+            private IEnumerator<string> RightEnumerator => ChildEnumerators[1];
+            protected override string GetCurrent_Impl()
             {
-                position++;
-                if (position == ch.Height) return false;
-
                 StringBuilder sb = new();
-                leftEnumerator.MoveNext();
-                sb.Append(leftEnumerator.Current);
+                sb.Append(LeftEnumerator.Current);
                 sb.Append(VERTICAL_EDGE);
-
-                rightEnumerator.MoveNext();
-                sb.Append(rightEnumerator.Current);
-
-                Current = sb.ToString();
-                return true;
+                sb.Append(RightEnumerator.Current);
+                return sb.ToString();
             }
-
-            public void Reset()
+            protected override bool MoveChildren_Impl()
             {
-                Current = "";
-                position = -1;
+                LeftEnumerator.MoveNext();
+                RightEnumerator.MoveNext();
+                return true;
             }
         }
     }
