@@ -15,5 +15,10 @@ namespace Boites
                 ;
             return pos;
         }
+
+        public static string ReadUntilChar(string s, char endToken)
+        {
+            return s[..FindIf(s, c => c == endToken)];
+        }
     }
 }

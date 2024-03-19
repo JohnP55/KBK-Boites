@@ -37,40 +37,42 @@ namespace Boites
         {
             return new ComboVerticalEnumerator(this);
         }
-        class ComboVerticalEnumerator(ComboVertical cv) : IEnumerator<string>
+
+        class ComboVerticalEnumerator(ComboVertical cv) : AbstractBoiteEnumerator(cv)
         {
-            public string Current { get; private set; } = "";
-            private int position = Utils.DEFAULT_POSITION;
-            private readonly IEnumerator<string> topEnumerator = cv.TopBox.GetEnumerator();
-            private readonly IEnumerator<string> bottomEnumerator = cv.BottomBox.GetEnumerator();
-            object IEnumerator.Current => throw new NotImplementedException();
-
-            public void Dispose() { }
-
-            public bool MoveNext()
+            private IEnumerator<string> TopEnumerator => ChildEnumerators[0];
+            private IEnumerator<string> BottomEnumerator => ChildEnumerators[1];
+            private IEnumerator<string>? CurrentChildEnumerator
             {
-                position++;
-                if (position >= cv.Height) return false;
-
+                get
+                {
+                    if (Position < cv.TopBox.Height)
+                        return TopEnumerator;
+                    else if (Position > cv.TopBox.Height)
+                        return BottomEnumerator;
+                    else // wall
+                        return null;
+                }
+            }
+            private bool ShouldDisplayWall => Position == cv.TopBox.Height;
+            protected override string GetCurrent_Impl()
+            {
                 StringBuilder sb = new();
-                if (position == cv.TopBox.Height)
+                if (ShouldDisplayWall)
                 {
                     sb.Append(HORIZONTAL_EDGE, cv.Width);
                 }
                 else
                 {
-                    var enumerator = position < cv.TopBox.Height ? topEnumerator : bottomEnumerator;
-                    enumerator.MoveNext();
-                    sb.Append(enumerator.Current);
+                    sb.Append(CurrentChildEnumerator!.Current);
                 }
-                Current = sb.ToString();
-                return true;
+                return sb.ToString();
             }
-
-            public void Reset()
+            protected override bool MoveChildren_Impl()
             {
-                Current = "";
-                position = -1;
+                if (!ShouldDisplayWall)
+                    return CurrentChildEnumerator!.MoveNext();
+                return true;
             }
         }
     }

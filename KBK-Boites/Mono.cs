@@ -43,38 +43,30 @@ namespace Boites
             viz.Sortir();
         }
 
-        class MonoEnumerator(Mono mono) : IEnumerator<string>
+        class MonoEnumerator : AbstractBoiteEnumerator
         {
             const char PADDING = ' ';
-            private string[] Lines { get; } = mono.Text.SplitLines();
-            public string Current { get; private set; } = "";
-
-            private int position = Utils.DEFAULT_POSITION;
-            object IEnumerator.Current => throw new NotImplementedException();
-
-            public void Dispose() { }
-
-            public bool MoveNext()
+            private string[] Lines { get; }
+            public MonoEnumerator(Mono mono) : base(mono)
             {
-                position++;
-                if (position >= mono.Height) return false;
+                Lines = Utils.SplitLines(mono.Text);
+            }
+            protected override string GetCurrent_Impl()
+            {
+                string line = Position < Lines.Length ? Lines[Position] : "";
 
-                string line = position < Lines.Length ? Lines[position] : "";
-                int paddingCount = mono.Width - line.Length;
-                
                 StringBuilder sb = new();
                 sb.Append(line);
+
+                int paddingCount = Box.Width - line.Length;
                 if (paddingCount > 0)
                     sb.Append(PADDING, paddingCount);
-
-                Current = sb.ToString();
-                return true;
+                
+                return sb.ToString();
             }
-
-            public void Reset()
+            protected override bool MoveChildren_Impl()
             {
-                position = Utils.DEFAULT_POSITION;
-                Current = "";
+                return true;
             }
         }
     }

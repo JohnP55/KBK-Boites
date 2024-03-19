@@ -65,12 +65,12 @@ namespace Boites
             viz.Sortir();
         }
     }
-    public abstract class BoxEnumerator : IEnumerator<string>
+    public abstract class AbstractBoiteEnumerator : IEnumerator<string>
     {
         object IEnumerator.Current => throw new NotImplementedException();
         
         protected const int DEFAULT_POSITION = -1;
-        protected BoxEnumerator(IBoite box)
+        protected AbstractBoiteEnumerator(IBoite box)
         {
             Box = box;
             InitChildEnumerators();
@@ -82,7 +82,7 @@ namespace Boites
 
         protected IBoite Box { get; init; }
         protected virtual int ScaledHeight { get; set; }
-        List<IEnumerator<string>> ChildEnumerators { get; } = new List<IEnumerator<string>>();
+        protected List<IEnumerator<string>> ChildEnumerators { get; } = new List<IEnumerator<string>>();
         protected void InitChildEnumerators()
         {
             foreach (var child in Box.Children)
