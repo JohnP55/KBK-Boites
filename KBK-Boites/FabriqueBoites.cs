@@ -18,7 +18,7 @@ namespace Boites
     public class FabriqueBoites
     {
         int Position { get; set; } = 0;
-        List<IBoite> ParseSome(string[] boxes, int boxCount)
+        List<IBoite> ParseChildren(string[] boxes, int boxCount)
         {
             List<IBoite> output = [];
             for (int i = 0; i < boxCount; i++)
@@ -46,19 +46,19 @@ namespace Boites
                     case "ch":
                         {
                             Position++;
-                            var parsedBoxes = ParseSome(boxes, 2);
+                            var parsedBoxes = ParseChildren(boxes, 2);
                             return new ComboHorizontal(parsedBoxes[0], parsedBoxes[1]);
                         }
                     case "cv":
                         {
                             Position++;
-                            var parsedBoxes = ParseSome(boxes, 2);
+                            var parsedBoxes = ParseChildren(boxes, 2);
                             return new ComboVertical(parsedBoxes[0], parsedBoxes[1]);
                         }
                     case "mc":
                         {
                             Position++;
-                            var parsedBoxes = ParseSome(boxes, 1);
+                            var parsedBoxes = ParseChildren(boxes, 1);
                             return new MonoCombo(parsedBoxes[0]);
                         }
                     default:
