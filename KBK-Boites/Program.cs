@@ -20,22 +20,126 @@ class Program
            "ch\ncv\nmc\nmono J'aime mon \"prof\"\nmono moi itou\nmono eh ben");
         Console.WriteLine(new Boite(p));
     }
+    static Couleureur couleureur = new();
+    static Mesureur mesureur = new();
+    static void PrintBoitesFromNotation(string notation)
+    {
+        var boites = new FabriqueBoites().Créer(notation);
+        Tester(new Boite(boites), couleureur, mesureur);
+    }
+    static void Part3Test()
+    {
+
+        PrintBoitesFromNotation(@"cv
+mono We're no strangers to love
+cv
+ch
+mono You know the rules and so do I
+mono A full commitment's what I'm thinking of
+mono You wouldn't get this from any other guy");
+        PrintBoitesFromNotation(@"cv
+mono I just wanna tell you how I'm feeling
+cv
+mono 
+mono Gotta make you understand
+");
+        PrintBoitesFromNotation(@"ch
+ch
+mono 
+cv
+mono Never gonna give you up
+ch
+mono Never gonna let you down
+cv
+mono Never gonna run around and desert you
+ch
+mono Never gonna make you cry
+ch
+mono 
+ch
+mono Never gonna say goodbye
+mono Never gonna tell a lie and hurt you
+mono 
+mono ");
+
+        PrintBoitesFromNotation(@"ch
+mono We've known each other for so long
+cv
+cv
+cv
+mono Your heart's been aching, but you're too shy to say it
+mono Inside, we both know what's been going on
+mono We know the game and we're gonna play it.
+mono ");
+        PrintBoitesFromNotation(@"ch
+ch
+mono And if you ask me how I'm feeling
+ch
+mono 
+mono 
+mono Don't tell me you're too blind to see");
+
+        PrintBoitesFromNotation(@"cv
+cv
+mono Never gonna give you up
+ch
+mono 
+ch
+mono Never gonna let you down
+ch
+mono Never gonna run around and desert you
+ch
+mono 
+ch
+mono Never gonna make you cry
+cv
+mono Never gonna say goodbye
+mono 
+mono Never gonna tell a lie and hurt you
+mono ");
+
+        PrintBoitesFromNotation(@"mc
+mc
+mc
+mc
+mc
+ch
+mc
+mc
+mono Never gonna give you up
+ch
+ch
+mono Never gonna let you down
+mc
+mc
+mono Never gonna run around and desert you
+ch
+ch
+mono 
+mono Never gonna make you cry
+cv
+mono Never gonna say goodbye
+mc
+mono Never gonna tell a lie and hurt you");
+    }
     static void Main(string[] args)
     {
-        Stopwatch sw = Stopwatch.StartNew();
-        TestFabriques();
-        TesterVisiteurs();
-        sw.Stop();
-        Console.WriteLine($"Executed in {sw.ElapsedMilliseconds}ms");
+        // Stopwatch sw = Stopwatch.StartNew();
+        // TestFabriques();
+        // TesterVisiteurs();
+        // sw.Stop();
+        // Console.WriteLine($"Executed in {sw.ElapsedMilliseconds}ms");
+        Part3Test();
+        
+    }
+    static void Tester(Boite b, params IVisiteur<IBoite>[] viz)
+    {
+        Console.WriteLine(b);
+        foreach (var v in viz)
+            b.Accepter(v);
     }
     static void TesterVisiteurs()
     {
-        static void Tester(Boite b, params IVisiteur<IBoite>[] viz)
-        {
-            Console.WriteLine(b);
-            foreach (var v in viz)
-                b.Accepter(v);
-        }
         var coul = new Couleureur();
         var mes = new Mesureur();
         Tester(new Boite(), coul, mes);

@@ -8,7 +8,7 @@ namespace Boites
 {
     public class Couleureur : IVisiteur<IBoite>
     {
-        private int indentDepth = 0;
+        private int indentDepth = -2;
         const int NUM_INDENTS = 2;
         const char INDENT = ' ';
         public void Entrer()
