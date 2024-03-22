@@ -29,7 +29,6 @@ class Program
     }
     static void Part3Test()
     {
-
         PrintBoitesFromNotation(@"cv
 mono We're no strangers to love
 cv

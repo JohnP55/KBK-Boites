@@ -38,8 +38,8 @@ namespace Boites
                 switch (prefix.ToLower())
                 {
                     case "mono":
-                        {
-                            string text = box.Substring(postPrefix + 1, box.Length - postPrefix - 1);
+                        {                                
+                            string text = postPrefix < box.Length ? box.Substring(postPrefix + 1, box.Length - postPrefix - 1) : "";
                             Position++;
                             return new Mono(text);
                         }
