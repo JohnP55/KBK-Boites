@@ -21,10 +21,8 @@ namespace Boites
         }
         protected override void ResizeChildren()
         {
-            foreach (var child in Children)
-            {
-                child.Resize(child.Width, Height);
-            }
+            LeftBox.Resize(LeftBox.Width, Height);
+            RightBox.Resize(Width - LeftBox.Width - 1, Height);
         }
         protected override (int, int) MinSize()
         {
